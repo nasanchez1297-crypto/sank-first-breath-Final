@@ -409,15 +409,26 @@ async function askGod(){
 The person wrote this on their heart this morning:
 "${heart}"
 
-Your response must be a JSON object with these exact keys:
-- verseRef: a Bible verse reference (e.g. "Psalm 34:18") that speaks directly to what they shared
-- verseSearch: the same reference formatted for the bible-api.com URL (e.g. "Psalm/34/18" — use + for multi-word books like "1+John/4/8")
-- verseText: the exact text of that Bible verse (KJV or WEB translation)
-- reflection: 2-3 sentences of warm, honest, non-preachy reflection that connects this verse to exactly what they wrote. Speak directly to them. No clichés.
-- prayer: a short, personal prayer (2-4 sentences) that includes echoes of what they shared. End with Amen.
-- closingLine: one single sentence to close — warm, intimate, like a whisper from God.
+Return ONLY a valid JSON object with exactly these keys:
+{
+  "verseRef": "string",
+  "verseSearch": "string",
+  "verseText": "string",
+  "reflection": "string",
+  "prayer": "string",
+  "closingLine": "string"
+}
 
-Return ONLY valid JSON. No markdown. No explanation.`;
+Rules:
+- verseRef must be a real Bible verse reference like "Psalm 34:18"
+- verseSearch must work with bible-api.com like "Psalm/34/18" or "1+Peter/5/7"
+- verseText must be plain text only
+- reflection must be 2-3 warm sentences
+- prayer must end with "Amen."
+- closingLine must be one short sentence
+- no markdown
+- no code block
+- JSON only`;
 
     const aiRes = await fetch("/.netlify/functions/ask-god", {
       method: "POST",
@@ -425,26 +436,11 @@ Return ONLY valid JSON. No markdown. No explanation.`;
       body: JSON.stringify({ prompt })
     });
 
-    const raw = await aiRes.text();
-    let aiData = {};
-
-    try {
-      aiData = JSON.parse(raw);
-    } catch {
-      throw new Error(`Function returned invalid JSON: ${raw}`);
-    }
+    const parsed = await aiRes.json();
 
     if (!aiRes.ok) {
-      throw new Error(aiData.error || `Function failed with ${aiRes.status}`);
+      throw new Error(parsed.error || 'Could not connect.');
     }
-
-    const rawText = aiData.text || '';
-    if (!rawText) {
-      throw new Error('Empty response from AI function');
-    }
-
-    const clean = rawText.replace(/```json|```/g, '').trim();
-    const parsed = JSON.parse(clean);
 
     let verseText = parsed.verseText || '';
     let verseRef = parsed.verseRef || '';
@@ -456,17 +452,17 @@ Return ONLY valid JSON. No markdown. No explanation.`;
         verseText = bData.text.trim();
         verseRef = bData.reference || parsed.verseRef;
       }
-    } catch {}
+    } catch(e) {}
 
     showSpinner(false);
 
     document.getElementById('speak-form').style.display = 'none';
 
-    document.getElementById('speakVerseCard').innerHTML = `
+    const speakVerseCard = document.getElementById('speakVerseCard');
+    speakVerseCard.innerHTML = `
       <div class="verse-ref">${(verseRef || '').toUpperCase()}</div>
       ${verseText ? `<div class="verse-text">"${verseText}"</div><div class="verse-divider"></div>` : ''}
-      <div class="verse-reflection">${parsed.reflection || ''}</div>
-    `;
+      <div class="verse-reflection">${parsed.reflection || ''}</div>`;
 
     document.getElementById('speakPrayerText').textContent = parsed.prayer || '';
     document.getElementById('speakPrayerCard').style.display = 'block';
@@ -483,7 +479,6 @@ Return ONLY valid JSON. No markdown. No explanation.`;
     console.error('FULL ERROR:', e);
   }
 }
-
 function resetSpeak(){
 
   document.getElementById('heartInput').value = '';
