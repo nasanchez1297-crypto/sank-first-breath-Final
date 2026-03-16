@@ -29,67 +29,75 @@ exports.handler = async (event) => {
       };
     }
 
-    const response = await fetch(
+    const geminiResponse = await fetch(
       `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`,
       {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           contents: [
             {
-              parts: [{ text: prompt }],
-            },
+              parts: [{ text: prompt }]
+            }
           ],
           generationConfig: {
             temperature: 0.7,
             maxOutputTokens: 1000,
-            responseMimeType: "application/json",
-          },
-        }),
+            responseMimeType: "application/json"
+          }
+        })
       }
     );
 
-    const data = await response.json();
+    const data = await geminiResponse.json();
 
-    if (!response.ok) {
+    if (!geminiResponse.ok) {
       return {
-        statusCode: response.status,
+        statusCode: geminiResponse.status,
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          error: data?.error?.message || "Gemini request failed",
-          raw: data,
-        }),
+          error: data?.error?.message || "Gemini request failed"
+        })
       };
     }
 
-    const text =
+    const rawText =
       data?.candidates?.[0]?.content?.parts?.map((p) => p.text).join("") || "";
 
-    if (!text) {
+    if (!rawText) {
+      return {
+        statusCode: 500,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ error: "Gemini returned empty text" })
+      };
+    }
+
+    let parsed;
+    try {
+      parsed = JSON.parse(rawText);
+    } catch (e) {
       return {
         statusCode: 500,
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          error: "Gemini returned empty text",
-          raw: data,
-        }),
+          error: "Gemini returned invalid JSON",
+          rawText
+        })
       };
     }
 
     return {
       statusCode: 200,
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ text }),
+      body: JSON.stringify(parsed)
     };
   } catch (err) {
     return {
       statusCode: 500,
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        error: err.message || "Server error",
-      }),
+        error: err.message || "Server error"
+      })
     };
   }
 };
