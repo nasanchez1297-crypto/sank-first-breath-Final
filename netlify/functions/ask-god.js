@@ -19,7 +19,7 @@ exports.handler = async (event) => {
     }
 
     const body = JSON.parse(event.body || "{}");
-    const prompt = body.prompt;
+    let prompt = body.prompt;
 
     if (!prompt) {
       return {
@@ -27,6 +27,11 @@ exports.handler = async (event) => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ error: "Missing prompt" }),
       };
+    }
+
+    // prevent very long prompts from breaking structured output
+    if (prompt.length > 5000) {
+      prompt = prompt.slice(0, 5000);
     }
 
     const geminiResponse = await fetch(
@@ -42,8 +47,27 @@ exports.handler = async (event) => {
           ],
           generationConfig: {
             temperature: 0.7,
-            maxOutputTokens: 1000,
-            responseMimeType: "application/json"
+            maxOutputTokens: 900,
+            responseMimeType: "application/json",
+            responseSchema: {
+              type: "OBJECT",
+              properties: {
+                verseRef: { type: "STRING" },
+                verseSearch: { type: "STRING" },
+                verseText: { type: "STRING" },
+                reflection: { type: "STRING" },
+                prayer: { type: "STRING" },
+                closingLine: { type: "STRING" }
+              },
+              required: [
+                "verseRef",
+                "verseSearch",
+                "verseText",
+                "reflection",
+                "prayer",
+                "closingLine"
+              ]
+            }
           }
         })
       }
@@ -80,8 +104,7 @@ exports.handler = async (event) => {
         statusCode: 500,
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          error: "Gemini returned invalid JSON",
-          rawText
+          error: "Your message was too long for a clean response. Try a slightly shorter version."
         })
       };
     }
