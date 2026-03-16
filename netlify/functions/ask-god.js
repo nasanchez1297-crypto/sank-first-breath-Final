@@ -19,9 +19,9 @@ exports.handler = async (event) => {
     }
 
     const body = JSON.parse(event.body || "{}");
-    let prompt = body.prompt;
+    const userPrompt = body.prompt || "";
 
-    if (!prompt) {
+    if (!userPrompt.trim()) {
       return {
         statusCode: 400,
         headers: { "Content-Type": "application/json" },
@@ -29,10 +29,7 @@ exports.handler = async (event) => {
       };
     }
 
-    // prevent very long prompts from breaking structured output
-    if (prompt.length > 5000) {
-      prompt = prompt.slice(0, 5000);
-    }
+    const trimmedPrompt = userPrompt.slice(0, 9000);
 
     const geminiResponse = await fetch(
       `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`,
@@ -42,12 +39,12 @@ exports.handler = async (event) => {
         body: JSON.stringify({
           contents: [
             {
-              parts: [{ text: prompt }]
+              parts: [{ text: trimmedPrompt }]
             }
           ],
           generationConfig: {
-            temperature: 0.7,
-            maxOutputTokens: 900,
+            temperature: 0.6,
+            maxOutputTokens: 700,
             responseMimeType: "application/json",
             responseSchema: {
               type: "OBJECT",
@@ -104,7 +101,7 @@ exports.handler = async (event) => {
         statusCode: 500,
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          error: "Your message was too long for a clean response. Try a slightly shorter version."
+          error: "Something went wrong preparing your word. Please try again."
         })
       };
     }
