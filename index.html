@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>SANK · First Breath</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f0ece4;--cream:#f7f3eb;--white:#fdfaf5;
+  --gold:#c4853a;--gold-soft:rgba(196,133,58,0.12);--gold-mid:rgba(196,133,58,0.3);
+  --brown:#8b5a3a;--taupe:#b8a090;--dark:#3d2410;--muted:#8a6e58;
+  --light:#e8e0d4;--sand:#eae2d6;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{background:var(--bg);color:var(--dark);font-family:'DM Sans',sans-serif;min-height:100vh;overflow-x:hidden}
+body{background:radial-gradient(ellipse at top, rgba(255,255,255,.45), transparent 48%),linear-gradient(180deg,#f5efe6 0%,#ece3d6 100%)}
+body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse at 50% -5%,rgba(196,133,58,0.1) 0%,transparent 55%);pointer-events:none;z-index:0}
+.screen{display:none;min-height:100vh;flex-direction:column;align-items:center;justify-content:center;padding:48px 28px 60px;position:relative;z-index:1;max-width:420px;margin:auto}
+.screen.active{display:flex;animation:fadeUp .7s ease}
+@keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+.logo{text-align:center;margin-bottom:36px}
+.logo-mark{font-family:'Playfair Display',serif;font-size:42px;font-weight:900;color:var(--dark);letter-spacing:.18em;line-height:1}
+.logo-mark span{color:var(--gold)}
+.logo-line{width:28px;height:1px;background:var(--gold);margin:10px auto;opacity:.5}
+.logo-sub{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:14px;color:var(--muted);letter-spacing:.28em;text-transform:uppercase}
+.welcome-title{font-family:'Playfair Display',serif;font-size:34px;font-weight:600;font-style:italic;color:var(--dark);text-align:center;line-height:1.25;margin-bottom:12px}
+.subtitle{display:block;margin-top:8px;font-family:'Cormorant Garamond',serif;font-style:italic;color:var(--gold);font-size:24px}
+.welcome-sub{font-family:'Cormorant Garamond',serif;font-size:19px;font-style:italic;color:var(--muted);text-align:center;line-height:1.85;margin-bottom:40px;max-width:300px}
+.ornament{font-size:22px;color:var(--gold);opacity:.5;margin-bottom:28px;letter-spacing:.4em}
+.btn{width:100%;max-width:320px;padding:13px 18px;font-family:'DM Sans',sans-serif;font-size:12px;letter-spacing:.28em;text-transform:uppercase;border:none;cursor:pointer;border-radius:20px;transition:transform .25s ease,box-shadow .25s ease,background .25s ease;margin:5px 0;box-shadow:0 8px 22px rgba(61,36,16,0.08),inset 0 1px 0 rgba(255,255,255,.35)}
+.btn:hover{transform:translateY(-1px);box-shadow:0 12px 26px rgba(61,36,16,0.1),inset 0 1px 0 rgba(255,255,255,.35)}
+.btn:active{transform:scale(.985)}
+.btn-gold{background:linear-gradient(180deg,#d39a53 0%,#be7f35 100%);color:var(--white);font-weight:500}
+.btn-outline{background:rgba(255,255,255,.78);color:var(--dark);border:1px solid rgba(61,36,16,.09)}
+.btn-ghost{background:transparent;color:var(--muted);font-size:10px;letter-spacing:.22em;padding:11px 14px;box-shadow:none}
+
+/* ---- SPEAK btn special ---- */
+.btn-speak{
+  background:linear-gradient(135deg,rgba(196,133,58,0.13),rgba(139,90,58,0.09));
+  color:var(--brown);
+  border:1px solid rgba(196,133,58,.3);
+  position:relative;
+  overflow:hidden;
+}
+.btn-speak::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(255,255,255,.3),transparent);
+  pointer-events:none;
+}
+.btn-speak:hover{background:linear-gradient(135deg,rgba(196,133,58,.2),rgba(139,90,58,.13));border-color:rgba(196,133,58,.5)}
+
+.verse-card,.prayer-card,.reading-card{border-radius:28px;box-shadow:0 18px 45px rgba(61,36,16,.08)}
+.verse-card{width:100%;max-width:360px;background:var(--white);border:1px solid rgba(196,133,58,.22);padding:38px 28px;margin-bottom:24px;position:relative;overflow:hidden;transform:translateZ(0);animation:cardFloat 1s cubic-bezier(.22,1,.36,1)}
+.verse-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent);opacity:.5}
+.verse-card::after{content:'\201C';position:absolute;top:8px;left:16px;font-family:'Playfair Display',serif;font-size:100px;color:var(--gold);opacity:.06;line-height:1;pointer-events:none}
+@keyframes cardFloat{from{opacity:0;transform:translateY(22px) scale(.985)}to{opacity:1;transform:translateY(0) scale(1)}}
+.verse-ref{font-size:9px;letter-spacing:.65em;text-transform:uppercase;color:var(--gold);margin-bottom:18px;opacity:.8}
+.verse-text{font-family:'Playfair Display',serif;font-size:20px;font-style:italic;color:var(--dark);line-height:1.65;margin-bottom:18px}
+.verse-divider{width:24px;height:1px;background:var(--gold);opacity:.35;margin:0 0 16px}
+.verse-reflection{font-family:'Cormorant Garamond',serif;font-size:17px;font-style:italic;color:var(--muted);line-height:1.8}
+.daily-date{font-size:9px;letter-spacing:.55em;text-transform:uppercase;color:var(--muted);opacity:.5;margin-bottom:24px;text-align:center}
+.prayer-card{width:100%;max-width:360px;background:linear-gradient(135deg,rgba(196,133,58,0.1),rgba(139,90,58,0.08));border:1px solid rgba(196,133,58,.25);padding:26px 28px;margin-bottom:22px;animation:softRise .9s cubic-bezier(.22,1,.36,1)}
+.prayer-label{font-size:8px;letter-spacing:.65em;text-transform:uppercase;color:var(--gold);margin-bottom:12px;opacity:.7}
+.prayer-text{font-family:'Cormorant Garamond',serif;font-size:17px;font-style:italic;color:var(--brown);line-height:1.85}
+.reading-card{width:100%;max-width:360px;background:var(--white);border:1px solid rgba(196,133,58,.15);padding:28px 24px;margin-bottom:16px;max-height:52vh;overflow-y:auto}
+.reading-card::-webkit-scrollbar{width:3px}
+.reading-card::-webkit-scrollbar-thumb{background:var(--gold-mid);border-radius:2px}
+.reading-header{width:100%;max-width:360px;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center}
+.reading-back{font-size:11px;letter-spacing:.28em;text-transform:uppercase;color:var(--muted);cursor:pointer;background:none;border:none;font-family:'DM Sans',sans-serif}
+.reading-ref{font-size:10px;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);opacity:.6}
+.reading-title{font-family:'Playfair Display',serif;font-size:18px;font-weight:700;color:var(--dark);margin-bottom:20px}
+.reading-verse{margin-bottom:12px;display:flex;gap:10px}
+.reading-num{font-size:9px;color:var(--gold);opacity:.5;margin-top:4px;flex-shrink:0}
+.reading-text{font-family:'Cormorant Garamond',serif;font-size:17px;color:var(--dark);line-height:1.75}
+.select-row{width:100%;max-width:360px;display:flex;gap:8px;margin-bottom:14px}
+.sel{flex:1;padding:11px 12px;background:var(--white);border:1px solid rgba(196,133,58,.2);border-radius:16px;font-family:'DM Sans',sans-serif;font-size:12px;color:var(--dark);outline:none}
+.loading-wrap{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 20px;gap:16px}
+.loading-cross{font-size:28px;color:var(--gold);opacity:.4;animation:pulse 2s ease infinite}
+@keyframes pulse{0%,100%{opacity:.4}50%{opacity:.8}}
+.loading-text{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:17px;color:var(--muted)}
+.divider{width:32px;height:1px;background:var(--gold);opacity:.2;margin:12px auto}
+
+/* ---- SPEAK SCREEN ---- */
+.speak-intro{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:20px;color:var(--muted);text-align:center;line-height:1.75;margin-bottom:32px;max-width:300px}
+.speak-intro strong{font-style:normal;color:var(--dark);font-weight:400}
+.heart-textarea{
+  width:100%;max-width:360px;
+  min-height:160px;
+  padding:24px 22px;
+  background:var(--white);
+  border:1px solid rgba(196,133,58,.25);
+  border-radius:24px;
+  font-family:'Cormorant Garamond',serif;
+  font-style:italic;
+  font-size:18px;
+  color:var(--dark);
+  line-height:1.75;
+  outline:none;
+  resize:none;
+  box-shadow:0 8px 30px rgba(61,36,16,.06);
+  transition:border-color .25s,box-shadow .25s;
+  margin-bottom:16px;
+}
+.heart-textarea::placeholder{color:var(--taupe);font-style:italic}
+.heart-textarea:focus{border-color:rgba(196,133,58,.5);box-shadow:0 8px 30px rgba(196,133,58,.12)}
+.char-hint{font-size:10px;letter-spacing:.2em;color:var(--muted);opacity:.4;text-align:center;margin-bottom:20px}
+
+/* personalised response */
+.personal-tag{
+  font-size:8px;letter-spacing:.6em;text-transform:uppercase;
+  color:var(--gold);opacity:.7;margin-bottom:20px;text-align:center;
+}
+.closing-line{
+  font-family:'Cormorant Garamond',serif;font-style:italic;
+  font-size:16px;color:var(--muted);text-align:center;
+  line-height:1.85;margin:16px 0 24px;opacity:.85;
+  max-width:300px;
+}
+
+.setup-overlay{
+  display:none;position:fixed;inset:0;z-index:500;
+  background:radial-gradient(ellipse at top,rgba(255,255,255,.45),transparent 48%),linear-gradient(180deg,#f5efe6 0%,#ece3d6 100%);
+  flex-direction:column;align-items:center;justify-content:center;padding:40px 28px;
+}
+.setup-overlay.active{display:flex}
+.setup-box{width:100%;max-width:360px;background:var(--white);border:1px solid rgba(196,133,58,.25);border-radius:28px;padding:36px 28px;box-shadow:0 18px 45px rgba(61,36,16,.08)}
+.setup-title{font-family:'Playfair Display',serif;font-size:22px;font-style:italic;color:var(--dark);margin-bottom:8px;text-align:center}
+.setup-sub{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:16px;color:var(--muted);text-align:center;line-height:1.7;margin-bottom:24px}
+.setup-input{width:100%;padding:14px 16px;background:var(--bg);border:1px solid rgba(196,133,58,.3);border-radius:16px;font-family:'DM Sans',sans-serif;font-size:13px;color:var(--dark);outline:none;margin-bottom:8px}
+.setup-hint{font-size:10px;letter-spacing:.15em;color:var(--muted);opacity:.5;margin-bottom:20px;text-align:center}
+.survey-btn{position:fixed;bottom:20px;right:16px;z-index:999;display:flex;align-items:center;gap:7px;padding:9px 14px;background:rgba(253,250,245,.92);backdrop-filter:blur(8px);border:1px solid rgba(196,133,58,.3);border-radius:999px;cursor:pointer;transition:all .25s;text-decoration:none;box-shadow:0 12px 28px rgba(61,36,16,.10)}
+.survey-btn:hover{background:var(--white);border-color:rgba(196,133,58,.6)}
+.survey-dot{width:5px;height:5px;border-radius:50%;background:var(--gold);opacity:.8;flex-shrink:0}
+.survey-label{font-family:'DM Sans',sans-serif;font-weight:300;font-size:9px;letter-spacing:.35em;text-transform:uppercase;color:var(--muted)}
+.toast{position:fixed;bottom:32px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--dark);color:var(--white);padding:14px 28px;border-radius:2px;font-size:11px;letter-spacing:.2em;text-transform:uppercase;transition:transform .3s ease;z-index:200;white-space:nowrap}
+.toast.show{transform:translateX(-50%) translateY(0)}
+.spinner-overlay{display:none;position:fixed;inset:0;background:rgba(61,36,16,.55);z-index:300;align-items:center;justify-content:center;flex-direction:column;gap:18px}
+.spinner-overlay.active{display:flex}
+.spinner{width:38px;height:38px;border:3px solid rgba(253,250,245,.25);border-top-color:var(--gold);border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.spinner-text{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:18px;color:#f7f3eb}
+
+.logo{animation:floatIn .9s cubic-bezier(.22,1,.36,1)}
+.welcome-title,.welcome-sub,.ornament{animation:softRise .9s cubic-bezier(.22,1,.36,1)}
+.welcome-sub{animation-delay:.08s;animation-fill-mode:both}
+.ornament{animation-delay:.14s;animation-fill-mode:both}
+@keyframes floatIn{from{opacity:0;transform:translateY(18px) scale(.985)}to{opacity:1;transform:translateY(0) scale(1)}}
+@keyframes softRise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+</style>
+</head>
+<body>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+<div class="spinner-overlay" id="spinner-overlay">
+  <div class="spinner"></div>
+  <div class="spinner-text" id="spinner-text">Preparing your verse...</div>
+</div>
+
+<a class="survey-btn" href="https://feedback-sankcoffee.netlify.app" target="_blank" rel="noopener">
+  <div class="survey-dot"></div>
+  <span class="survey-label">Feedback</span>
+</a>
+
+<!-- ═══════════════════════════════ WELCOME ═══════════════════════════════ -->
+<div class="screen active" id="screen-welcome">
+  <div class="logo">
+    <div class="logo-mark">S<span>A</span>NK</div>
+    <div class="logo-line"></div>
+    <div class="logo-sub">First Breath</div>
+  </div>
+  <div class="ornament">✦ ✦ ✦</div>
+  <div class="welcome-title">Before anything else<br><span class="subtitle">this moment is His.</span></div>
+  <div class="welcome-sub">Start your day with the Word. One verse. One reflection. One breath with God.</div>
+  <button class="btn btn-gold" onclick="openDailyVerse()">Open Today's Verse →</button>
+  <button class="btn btn-speak" onclick="goTo('screen-speak')">✦ &nbsp;Let God speak to you</button>
+  <button class="btn btn-outline" onclick="goTo('screen-reading')">Read the Bible</button>
+  <div class="divider"></div>
+  <div style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:14px;color:var(--muted);text-align:center;line-height:1.9;opacity:.7">
+    "This is the day the Lord has made.<br>Rejoice and be glad in it."<br>
+    <span style="font-size:11px;letter-spacing:.2em;font-style:normal;opacity:.6">— PSALM 118:24</span>
+  </div>
+</div>
+
+<!-- ══════════════════════════ SPEAK TO GOD ══════════════════════════ -->
+<div class="screen" id="screen-speak" style="justify-content:flex-start;padding-top:64px">
+  <div class="logo" style="margin-bottom:16px">
+    <div class="logo-mark" style="font-size:28px">S<span>A</span>NK</div>
+    <div class="logo-line"></div>
+    <div class="logo-sub">First Breath</div>
+  </div>
+
+  <div id="speak-form">
+    <p class="speak-intro">Before God speaks to you —<br><strong>what's on your heart this morning?</strong></p>
+    <textarea class="heart-textarea" id="heartInput" placeholder="I'm feeling anxious about… / I'm grateful for… / I need guidance on… / I just want to say…" maxlength="600"></textarea>
+    <p class="char-hint">Write as little or as much as you need.</p>
+    <button class="btn btn-gold" onclick="askGod()" style="width:100%;max-width:360px">Give it to God →</button>
+    <button class="btn btn-ghost" onclick="goTo('screen-welcome')" style="margin-top:4px">← Back</button>
+  </div>
+
+  <!-- Response from God -->
+  <div id="speak-response" style="display:none;width:100%;display:none;flex-direction:column;align-items:center">
+    <div class="personal-tag">✦ &nbsp; A word for you today &nbsp; ✦</div>
+    <div class="verse-card" id="speakVerseCard"></div>
+    <div class="prayer-card" id="speakPrayerCard" style="display:none">
+      <div class="prayer-label">A prayer just for you</div>
+      <div class="prayer-text" id="speakPrayerText"></div>
+    </div>
+    <p class="closing-line" id="speakClosingLine"></p>
+    <button class="btn btn-gold" onclick="shareVerse('speak')" style="display:flex;align-items:center;justify-content:center;gap:10px;width:100%;max-width:360px">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
+      Share
+    </button>
+    <button class="btn btn-ghost" onclick="resetSpeak()" style="margin-top:4px">← Start over</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════ DAILY VERSE ═══════════════════════════ -->
+<div class="screen" id="screen-verse">
+  <div class="logo" style="margin-bottom:20px">
+    <div class="logo-mark" style="font-size:28px">S<span>A</span>NK</div>
+    <div class="logo-line"></div>
+    <div class="logo-sub">First Breath</div>
+  </div>
+  <div class="daily-date" id="dailyDate">TODAY</div>
+  <div class="verse-card" id="verseCard">
+    <div class="loading-wrap">
+      <div class="loading-cross">✦</div>
+      <div class="loading-text">Receiving today's Word...</div>
+    </div>
+  </div>
+  <div class="prayer-card" id="prayerCard" style="display:none">
+    <div class="prayer-label">A prayer for today</div>
+    <div class="prayer-text" id="prayerText"></div>
+  </div>
+  <div id="shareRow" style="display:none;width:100%;margin-bottom:8px;justify-content:center">
+    <button class="btn btn-gold" onclick="shareVerse('verse')" style="display:flex;align-items:center;justify-content:center;gap:10px">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
+      Share
+    </button>
+  </div>
+  <button class="btn btn-outline" onclick="goTo('screen-reading')" style="margin-top:8px">Continue Reading →</button>
+  <button class="btn btn-ghost" onclick="goTo('screen-welcome')">← Back</button>
+</div>
+
+<!-- ══════════════════════════ BIBLE READING ═════════════════════════ -->
+<div class="screen" id="screen-reading" style="justify-content:flex-start;padding-top:52px">
+  <div class="reading-header">
+    <button class="reading-back" onclick="goTo('screen-welcome')">← Home</button>
+    <div class="reading-ref" id="readingRef">JOHN 3</div>
+  </div>
+  <div class="select-row">
+    <select id="bookSelect" class="sel" onchange="onBookChange()"></select>
+    <select id="chapterSelect" class="sel" onchange="loadChapter()"></select>
+  </div>
+  <div class="reading-card" id="readingContent">
+    <div class="loading-wrap"><div class="loading-cross">✦</div><div class="loading-text">Loading...</div></div>
+  </div>
+  <button class="btn btn-gold" onclick="nextChapter()">Next Chapter →</button>
+  <button class="btn btn-ghost" onclick="goTo('screen-verse')" style="margin-top:4px">← Today's Verse</button>
+</div>
+
+<div class="toast" id="toast">Copied!</div>
+
+<script>
+// ─────────────── DATA ───────────────
+const BIBLE_BOOKS={
+  "Genesis":50,"Exodus":40,"Leviticus":27,"Numbers":36,"Deuteronomy":34,
+  "Joshua":24,"Judges":21,"Ruth":4,"1 Samuel":31,"2 Samuel":24,
+  "1 Kings":22,"2 Kings":25,"1 Chronicles":29,"2 Chronicles":36,
+  "Ezra":10,"Nehemiah":13,"Esther":10,"Job":42,"Psalms":150,
+  "Proverbs":31,"Ecclesiastes":12,"Song of Solomon":8,"Isaiah":66,
+  "Jeremiah":52,"Lamentations":5,"Ezekiel":48,"Daniel":12,"Hosea":14,
+  "Joel":3,"Amos":9,"Obadiah":1,"Jonah":4,"Micah":7,"Nahum":3,
+  "Habakkuk":3,"Zephaniah":3,"Haggai":2,"Zechariah":14,"Malachi":4,
+  "Matthew":28,"Mark":16,"Luke":24,"John":21,"Acts":28,
+  "Romans":16,"1 Corinthians":16,"2 Corinthians":13,"Galatians":6,
+  "Ephesians":6,"Philippians":4,"Colossians":4,"1 Thessalonians":5,
+  "2 Thessalonians":3,"1 Timothy":6,"2 Timothy":4,"Titus":3,
+  "Philemon":1,"Hebrews":13,"James":5,"1 Peter":5,"2 Peter":3,
+  "1 John":5,"2 John":1,"3 John":1,"Jude":1,"Revelation":22
+};
+
+const VERSE_POOL=[
+  "John/3/16","Jeremiah/29/11","Psalm/23/1","Isaiah/40/31","Philippians/4/13",
+  "Romans/8/28","Psalm/46/10","Proverbs/3/5","Matthew/6/33","Joshua/1/9",
+  "Psalm/118/24","Lamentations/3/22","John/14/27","2+Timothy/1/7","Psalm/121/2",
+  "Matthew/11/28","Romans/15/13","Psalm/27/1","Ephesians/3/20","Psalm/37/4",
+  "Isaiah/41/10","John/16/33","Psalm/91/1","Hebrews/11/1","James/1/2",
+  "Psalm/139/14","Philippians/4/6","2+Corinthians/5/17","Galatians/5/22","Romans/12/2",
+  "Psalm/34/18","Isaiah/43/2","Matthew/5/14","Luke/1/37","Acts/2/28",
+  "Romans/5/8","1+Corinthians/10/13","Ephesians/2/8","Colossians/3/23","Hebrews/12/1",
+  "James/4/7","1+Peter/5/7","1+John/4/19","Revelation/21/4","Psalm/16/11",
+  "Psalm/19/14","Psalm/28/7","Psalm/31/24","Psalm/40/3","Psalm/55/22",
+  "Psalm/62/1","Psalm/73/26","Psalm/84/11","Psalm/90/14","Psalm/94/19",
+  "Psalm/103/2","Psalm/107/1","Psalm/119/105","Psalm/121/7","Psalm/145/18",
+  "Proverbs/4/23","Proverbs/16/3","Proverbs/17/17","Proverbs/18/10","Proverbs/22/6",
+  "Isaiah/26/3","Isaiah/30/21","Isaiah/53/5","Isaiah/55/8","Isaiah/58/11",
+  "Isaiah/61/1","Jeremiah/17/7","Jeremiah/31/3","Ezekiel/36/26","Daniel/10/19",
+  "Micah/6/8","Zephaniah/3/17","Matthew/5/6","Matthew/6/25","Matthew/7/7",
+  "Matthew/10/30","Matthew/17/20","Matthew/22/37","Matthew/28/20","Mark/10/27",
+  "Mark/11/24","Luke/6/38","Luke/11/9","Luke/12/7","John/1/14",
+  "John/6/35","John/8/32","John/10/10","John/11/25","John/13/34",
+  "John/15/5","John/15/13","Acts/1/8","Romans/1/16","Romans/6/23",
+  "Romans/8/1","Romans/8/38","Romans/10/9","Romans/12/12","Romans/15/4",
+  "1+Corinthians/13/13","1+Corinthians/15/57","2+Corinthians/4/17","2+Corinthians/12/9","Galatians/2/20",
+  "Galatians/6/9","Ephesians/4/32","Ephesians/6/10","Philippians/1/6","Philippians/4/4",
+  "Colossians/1/17","1+Thessalonians/5/16","1+Thessalonians/5/17","2+Timothy/3/16","Hebrews/4/12",
+  "Hebrews/4/16","Hebrews/10/23","James/1/17","James/2/17","1+Peter/2/9",
+  "1+Peter/3/15","2+Peter/3/9","1+John/1/9","1+John/3/1","1+John/4/4",
+  "Jude/1/24","Revelation/3/20","Revelation/22/20","Psalm/1/1","Psalm/4/8"
+];
+
+const ENRICHMENT={
+  "John 3:16":{reflection:"You are loved beyond measure. Not because of what you've done — but because of who He is. Let that truth be the first thing you carry today.",prayer:"Lord, thank you for this new day. Help me walk in your love — to give it freely and receive it fully. Amen."},
+  "Jeremiah 29:11":{reflection:"He already knows the road ahead. You don't have to figure it all out today. Just take the next step — He's already there.",prayer:"Father, I trust your plan even when I can't see it. Give me peace and courage to move forward. Amen."},
+  "Psalm 23:1":{reflection:"You have everything you need today. Not everything you want — but everything you need. Rest in that truth.",prayer:"Lord, you are my shepherd. Lead me today. Quiet the noise and remind me I am never alone. Amen."},
+  "Isaiah 40:31":{reflection:"Tired? Worn out? Give it to Him. Your strength is renewed not by trying harder — but by hoping deeper.",prayer:"God, I am tired. Renew me today. Fill me with your strength and help me soar. Amen."},
+  "Philippians 4:13":{reflection:"Today's challenges are not too big. Not because you're strong — but because He is. You are not doing this alone.",prayer:"Lord, remind me that your strength is made perfect in my weakness. Help me forward in faith. Amen."},
+  "Romans 8:28":{reflection:"Even the hard things. Even the painful things. Even the things that don't make sense yet. He is working.",prayer:"Father, I don't understand everything. But I trust you are working it all for good. I love you. Amen."},
+  "Psalm 46:10":{reflection:"Before the to-do list. Before the phone. Before the noise — be still. He is God. Let that be enough.",prayer:"Lord, quiet my heart this morning. In the stillness, let me know you. Just you. Amen."},
+  "Proverbs 3:5":{reflection:"You don't need to have it all figured out. Trust is not knowing the answer — it's knowing the One who does.",prayer:"God, I surrender my plans to you today. Make my paths straight. I choose to trust you. Amen."},
+  "Matthew 6:33":{reflection:"Put Him first today — not last. Not second. First. Everything else will find its right place.",prayer:"Lord, help me seek you first today. Before my phone, before my worries. You first. Always. Amen."},
+  "Joshua 1:9":{reflection:"Wherever today takes you — He is already there. You are walking into His presence, not the unknown.",prayer:"Father, give me courage today. I will not be afraid because you are with me. Amen."},
+  "Psalm 118:24":{reflection:"This day — this exact day — is a gift. Not a perfect day. A day the Lord has made. Rejoice in it.",prayer:"Thank you Lord for this day. Help me see it as a gift and live it with gratitude. Amen."},
+  "Matthew 11:28":{reflection:"You don't have to carry it alone. He's not asking you to figure it out — He's asking you to come.",prayer:"Jesus, I'm tired. I come to you with everything I'm carrying. Give me real rest. Amen."},
+};
+
+const DEFAULT_PRAYERS=["Lord, let this verse speak to my heart today. Open my eyes to what you want me to see. Amen.","Father, your Word is alive and active. Let it work in me today in ways I cannot yet imagine. Amen.","God, I receive this Word as a gift for today. Let it guide my steps and shape my heart. Amen.","Jesus, speak to me through your Word. I am listening. I am yours. Amen.","Holy Spirit, illuminate this verse for me today. Let it sink deep and bear fruit. Amen.","Lord, your Word is a lamp to my feet. Guide me with it today. Amen.","Father, I meditate on your Word this morning. Let it transform my mind and renew my spirit. Amen."];
+const DEFAULT_REFLECTIONS=["His Word is alive today — not just ancient words on a page. He is speaking to you through this verse right now.","Whatever this day holds, His Word goes with you. Let this verse be the anchor your soul needs.","He chose this verse for you today. Not by accident — by intention. Receive it with an open heart.","God's Word never returns empty. Something in this verse is exactly what you need today.","Before the noise of the day begins — let this Word be the first thing that settles in your soul.","His promises are yes and amen. Let this verse be a reminder today that He means every word He says.","Start with the Word and everything else follows. This is your foundation for today."];
+
+let currentVerseText='', currentVerseRef='';
+
+// ─────────────── NAV ───────────────
+function goTo(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0,0);
+}
+function getDayOfYear(){const now=new Date();const start=new Date(now.getFullYear(),0,0);return Math.floor((now-start)/(1000*60*60*24))}
+
+// ─────────────── DAILY VERSE ───────────────
+async function openDailyVerse(){
+  goTo('screen-verse');
+  const now=new Date();
+  const months=['JANUARY','FEBRUARY','MARCH','APRIL','MAY','JUNE','JULY','AUGUST','SEPTEMBER','OCTOBER','NOVEMBER','DECEMBER'];
+  document.getElementById('dailyDate').textContent=`TODAY · ${months[now.getMonth()]} ${now.getDate()}`;
+  document.getElementById('verseCard').innerHTML=`<div class="loading-wrap"><div class="loading-cross">✦</div><div class="loading-text">Receiving today's Word...</div></div>`;
+  document.getElementById('prayerCard').style.display='none';
+  document.getElementById('shareRow').style.display='none';
+  const day=getDayOfYear();
+  const verseRef=VERSE_POOL[day%VERSE_POOL.length];
+  try{
+    const res=await fetch(`https://bible-api.com/${verseRef}?translation=web`);
+    const data=await res.json();
+    if(data.text&&data.reference){
+      currentVerseText=data.text.trim();currentVerseRef=data.reference;
+      const enrichKey=Object.keys(ENRICHMENT).find(k=>data.reference.includes(k.split(' ')[0])&&data.reference.includes(k.split(' ')[1]));
+      const enrich=ENRICHMENT[enrichKey]||null;
+      const reflection=enrich?enrich.reflection:DEFAULT_REFLECTIONS[day%DEFAULT_REFLECTIONS.length];
+      const prayer=enrich?enrich.prayer:DEFAULT_PRAYERS[day%DEFAULT_PRAYERS.length];
+      document.getElementById('verseCard').innerHTML=`<div class="verse-ref">${data.reference.toUpperCase()}</div><div class="verse-text">"${currentVerseText}"</div><div class="verse-divider"></div><div class="verse-reflection">${reflection}</div>`;
+      document.getElementById('prayerText').textContent=prayer;
+      document.getElementById('prayerCard').style.display='block';
+      document.getElementById('shareRow').style.display='flex';
+      // Pre-load Bible reader to daily verse book/chapter
+      if(data.book_name && data.chapter){ preloadReader(data.book_name, data.chapter); }
+    } else {showFallback(day)}
+  } catch(e){showFallback(day)}
+}
+
+function showFallback(day){
+  const fallbacks=[
+    {ref:"Psalm 46:10",book:"Psalms",chapter:46,text:"Be still, and know that I am God.",reflection:"Before the noise of the day — be still. He is God. Let that be enough.",prayer:"Lord, quiet my heart this morning. In the stillness, let me know you. Amen."},
+    {ref:"Jeremiah 29:11",book:"Jeremiah",chapter:29,text:"For I know the plans I have for you, declares the Lord.",reflection:"He already knows the road ahead. Just take the next step — He's already there.",prayer:"Father, I trust your plan even when I can't see it. Give me peace today. Amen."},
+    {ref:"Isaiah 40:31",book:"Isaiah",chapter:40,text:"But those who hope in the Lord will renew their strength.",reflection:"Your strength is renewed not by trying harder — but by hoping deeper.",prayer:"God, renew me today. Fill me with your strength. Amen."},
+  ];
+  const v=fallbacks[day%fallbacks.length];
+  currentVerseText=v.text;currentVerseRef=v.ref;
+  document.getElementById('verseCard').innerHTML=`<div class="verse-ref">${v.ref.toUpperCase()}</div><div class="verse-text">"${v.text}"</div><div class="verse-divider"></div><div class="verse-reflection">${v.reflection}</div>`;
+  document.getElementById('prayerText').textContent=v.prayer;
+  document.getElementById('prayerCard').style.display='block';
+  document.getElementById('shareRow').style.display='flex';
+  preloadReader(v.book, v.chapter);
+}
+
+function preloadReader(book, chapter){
+  const keys=Object.keys(BIBLE_BOOKS);
+  const match=keys.find(k=>k.toLowerCase()===book.toLowerCase())||'John';
+  readerPreloaded = true;
+  const sel=document.getElementById('bookSelect');
+  if(sel){ sel.value=match; fillChapters(match, chapter); loadChapter(); }
+}
+
+// ─────────────── ASK GOD (AI) ───────────────
+async function askGod(){
+  const heart = document.getElementById('heartInput').value.trim();
+  if(!heart){
+    showToast('Write what is on your heart first');
+    return;
+  }
+
+  showSpinner(true, 'He is listening...');
+
+  try {
+    const prompt = `You are a gentle, warm spiritual companion for someone who just started their morning with a cup of coffee.
+
+The person wrote this on their heart this morning:
+"${heart}"
+
+Your response must be a JSON object with these exact keys:
+- verseRef: a Bible verse reference (e.g. "Psalm 34:18") that speaks directly to what they shared
+- verseSearch: the same reference formatted for the bible-api.com URL (e.g. "Psalm/34/18" — use + for multi-word books like "1+John/4/8")
+- verseText: the exact text of that Bible verse (KJV or WEB translation)
+- reflection: 2-3 sentences of warm, honest, non-preachy reflection that connects this verse to exactly what they wrote. Speak directly to them. No clichés.
+- prayer: a short, personal prayer (2-4 sentences) that includes echoes of what they shared. End with Amen.
+- closingLine: one single sentence to close — warm, intimate, like a whisper from God.
+
+Return ONLY valid JSON. No markdown. No explanation.`;
+
+    const aiRes = await fetch("/.netlify/functions/ask-god", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ prompt })
+    });
+
+    const raw = await aiRes.text();
+    let aiData = {};
+
+    try {
+      aiData = JSON.parse(raw);
+    } catch {
+      throw new Error(`Function returned invalid JSON: ${raw}`);
+    }
+
+    if (!aiRes.ok) {
+      throw new Error(aiData.error || `Function failed with ${aiRes.status}`);
+    }
+
+    const rawText = aiData.text || '';
+    if (!rawText) {
+      throw new Error('Empty response from AI function');
+    }
+
+    const clean = rawText.replace(/```json|```/g, '').trim();
+    const parsed = JSON.parse(clean);
+
+    let verseText = parsed.verseText || '';
+    let verseRef = parsed.verseRef || '';
+
+    try {
+      const bRes = await fetch(`https://bible-api.com/${parsed.verseSearch}?translation=web`);
+      const bData = await bRes.json();
+      if (bData.text) {
+        verseText = bData.text.trim();
+        verseRef = bData.reference || parsed.verseRef;
+      }
+    } catch {}
+
+    showSpinner(false);
+
+    document.getElementById('speak-form').style.display = 'none';
+
+    document.getElementById('speakVerseCard').innerHTML = `
+      <div class="verse-ref">${(verseRef || '').toUpperCase()}</div>
+      ${verseText ? `<div class="verse-text">"${verseText}"</div><div class="verse-divider"></div>` : ''}
+      <div class="verse-reflection">${parsed.reflection || ''}</div>
+    `;
+
+    document.getElementById('speakPrayerText').textContent = parsed.prayer || '';
+    document.getElementById('speakPrayerCard').style.display = 'block';
+    document.getElementById('speakClosingLine').textContent = parsed.closingLine || '';
+
+    const responseEl = document.getElementById('speak-response');
+    responseEl.style.display = 'flex';
+    responseEl.style.flexDirection = 'column';
+    responseEl.style.alignItems = 'center';
+
+  } catch(e) {
+    showSpinner(false);
+    showToast(e.message || 'Could not connect. Try again.');
+    console.error('FULL ERROR:', e);
+  }
+}
+
+function resetSpeak(){
+
+  document.getElementById('heartInput').value = '';
+  document.getElementById('speak-form').style.display = 'block';
+  document.getElementById('speak-response').style.display = 'none';
+  document.getElementById('speakPrayerCard').style.display = 'none';
+}
+
+// ─────────────── SHARE ───────────────
+function showSpinner(on, msg){
+  document.getElementById('spinner-overlay').classList.toggle('active', on);
+  if(msg) document.getElementById('spinner-text').textContent = msg;
+}
+
+async function shareVerse(source){
+  const overlay=document.getElementById('spinner-overlay');
+  let verseCard, prayerCard, dailyDateEl=document.getElementById('dailyDate');
+
+  if(source==='speak'){
+    verseCard=document.getElementById('speakVerseCard');
+    prayerCard=document.getElementById('speakPrayerCard');
+  } else {
+    verseCard=document.getElementById('verseCard');
+    prayerCard=document.getElementById('prayerCard');
+  }
+  if(!verseCard) return;
+  const exportStage=document.createElement('div');
+  exportStage.style.cssText='position:fixed;left:-99999px;top:0;width:430px;min-height:1000px;padding:56px 30px 64px;background:radial-gradient(ellipse at top,rgba(255,255,255,.45),transparent 48%),linear-gradient(180deg,#f5efe6 0%,#ece3d6 100%);color:#3d2410;font-family:\'DM Sans\',sans-serif;z-index:-1';
+  exportStage.innerHTML=`
+    <div style="text-align:center;margin-bottom:20px">
+      <div style="font-family:'Playfair Display',serif;font-size:28px;font-weight:900;letter-spacing:.18em;color:#3d2410">S<span style="color:#c4853a">A</span>NK</div>
+      <div style="width:28px;height:1px;background:#c4853a;opacity:.5;margin:10px auto"></div>
+      <div style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:14px;color:#8a6e58;letter-spacing:.28em;text-transform:uppercase">First Breath</div>
+    </div>
+    ${source!=='speak'?`<div style="font-size:9px;letter-spacing:.55em;text-transform:uppercase;color:#8a6e58;opacity:.55;margin-bottom:22px;text-align:center">${dailyDateEl?dailyDateEl.textContent:'TODAY'}</div>`:''}
+    <div style="width:100%;background:#fdfaf5;border:1px solid rgba(196,133,58,.22);border-radius:28px;padding:38px 28px;box-shadow:0 18px 45px rgba(61,36,16,.08);margin-bottom:18px">${verseCard.innerHTML}</div>
+    ${prayerCard&&prayerCard.style.display!=='none'?`<div style="width:100%;background:linear-gradient(135deg,rgba(196,133,58,0.1),rgba(139,90,58,0.08));border:1px solid rgba(196,133,58,.25);border-radius:26px;padding:26px 28px">${prayerCard.innerHTML}</div>`:''}
+  `;
+  document.body.appendChild(exportStage);
+  if(overlay)overlay.style.display='none';
+  let blob=null;
+  try{
+    await new Promise(r=>setTimeout(r,80));
+    const canvas=await html2canvas(exportStage,{scale:2,useCORS:true,backgroundColor:null,logging:false,scrollX:0,scrollY:0,width:exportStage.offsetWidth,height:exportStage.scrollHeight});
+    blob=await new Promise(res=>canvas.toBlob(res,'image/png',1));
+    if(!blob){const dataUrl=canvas.toDataURL('image/png',1);const r=await fetch(dataUrl);blob=await r.blob();}
+  }catch(e){console.error(e);showToast('Could not capture image');}
+  exportStage.remove();
+  if(overlay)overlay.style.display='';
+  if(!blob)return;
+  try{
+    const file=new File([blob],'sank-firstbreath.png',{type:'image/png'});
+    if(navigator.canShare&&navigator.canShare({files:[file]})){await navigator.share({files:[file],title:'SANK First Breath'});return;}
+  }catch(e){}
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');a.href=url;a.download='sank-firstbreath.png';
+  document.body.appendChild(a);a.click();a.remove();
+  setTimeout(()=>URL.revokeObjectURL(url),3000);
+  showToast('Image saved to your device');
+}
+
+// ─────────────── BIBLE READING ───────────────
+let readerPreloaded = false;
+function initBookSelect(){
+  const sel=document.getElementById('bookSelect');
+  Object.keys(BIBLE_BOOKS).forEach(b=>{const o=document.createElement('option');o.value=b;o.textContent=b;sel.appendChild(o)});
+  if(!readerPreloaded){ sel.value='John';fillChapters('John',3);loadChapter(); }
+}
+function fillChapters(book,selected){
+  const sel=document.getElementById('chapterSelect');sel.innerHTML='';
+  for(let i=1;i<=BIBLE_BOOKS[book];i++){const o=document.createElement('option');o.value=i;o.textContent=`Chapter ${i}`;sel.appendChild(o)}
+  sel.value=selected||1;
+}
+function onBookChange(){fillChapters(document.getElementById('bookSelect').value,1);loadChapter()}
+async function loadChapter(){
+  const book=document.getElementById('bookSelect').value;const ch=document.getElementById('chapterSelect').value;
+  document.getElementById('readingRef').textContent=`${book.toUpperCase()} ${ch}`;
+  document.getElementById('readingContent').innerHTML=`<div class="loading-wrap"><div class="loading-cross">✦</div><div class="loading-text">Loading...</div></div>`;
+  try{
+    const res=await fetch(`https://bible-api.com/${encodeURIComponent(book)}+${ch}?translation=web`);
+    const data=await res.json();
+    if(data.verses){document.getElementById('readingContent').innerHTML=`<div class="reading-title">${book} ${ch}</div>`+data.verses.map(v=>`<div class="reading-verse"><div class="reading-num">${v.verse}</div><div class="reading-text">${v.text.trim()}</div></div>`).join('');}
+    else{document.getElementById('readingContent').innerHTML=`<div style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:16px;color:var(--muted);text-align:center;padding:20px 0">Could not load this chapter.</div>`;}
+  }catch(e){document.getElementById('readingContent').innerHTML=`<div style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:16px;color:var(--muted);text-align:center;padding:20px 0">No internet. Please try again.</div>`;}
+}
+function nextChapter(){
+  const bSel=document.getElementById('bookSelect');const cSel=document.getElementById('chapterSelect');
+  const cur=parseInt(cSel.value);const max=BIBLE_BOOKS[bSel.value];
+  if(cur<max){cSel.value=cur+1}else{const books=Object.keys(BIBLE_BOOKS);const idx=books.indexOf(bSel.value);if(idx<books.length-1){bSel.value=books[idx+1];fillChapters(books[idx+1],1)}}
+  loadChapter();
+}
+function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2800)}
+
+window.addEventListener('DOMContentLoaded',initBookSelect);
+</script>
+</body>
+</html>
