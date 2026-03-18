@@ -1,37 +1,60 @@
 exports.handler = async (event) => {
-  try {
-    if (event.httpMethod !== "POST") {
-      return {
-        statusCode: 405,
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ error: "Method Not Allowed" }),
-      };
-    }
+  const jsonResponse = (statusCode, bodyObj) => ({
+    statusCode,
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(bodyObj),
+  });
 
-    const apiKey = process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY;
+  const fallbackResponse = {
+    verseRef: "Matthew 11:28",
+    verseSearch: "Matthew/11/28",
+    verseText: "Come to me, all who labor and are heavy laden, and I will give you rest.",
+    reflection:
+      "You do not have to carry everything by yourself right now. Bring what is heavy, confusing, or disappointing to God, and let this be a moment of rest instead of pressure.",
+    prayer:
+      "Lord, you see everything I am carrying today. Help me place it in your hands and trust that you are near even when things feel uncertain. Amen.",
+    closingLine:
+      "Bring it to Him, and let your heart be still for a moment.",
+  };
 
-    if (!apiKey) {
-      return {
-        statusCode: 500,
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ error: "GEMINI_API_KEY not configured in Netlify" }),
-      };
-    }
+  async function callGemini(apiKey, heartText) {
+    const safeHeart = String(heartText || "").trim().slice(0, 2500);
 
-    const body = JSON.parse(event.body || "{}");
-    const userPrompt = body.prompt || "";
+    const modelPrompt = `
+You are a gentle, biblically grounded Christian spiritual companion.
 
-    if (!userPrompt.trim()) {
-      return {
-        statusCode: 400,
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ error: "Missing prompt" }),
-      };
-    }
+A person is sharing what is on their heart this morning.
+Respond with compassion, warmth, and biblical truth.
+Do not sound robotic, preachy, dramatic, or overly long.
 
-    const trimmedPrompt = userPrompt.slice(0, 9000);
+User message:
+${JSON.stringify(safeHeart)}
 
-    const geminiResponse = await fetch(
+Return ONLY one valid JSON object with exactly these keys:
+{
+  "verseRef": "string",
+  "verseSearch": "string",
+  "verseText": "string",
+  "reflection": "string",
+  "prayer": "string",
+  "closingLine": "string"
+}
+
+Requirements:
+- Choose one real Bible verse that clearly fits what they shared.
+- verseRef example: "Psalm 34:18"
+- verseSearch example: "Psalm/34/18" or "1+Peter/5/7"
+- verseText must be plain text only
+- reflection must be warm, personal, biblical, and maximum 2 sentences
+- prayer must be short, personal, and end with "Amen."
+- closingLine must be one short comforting sentence
+- no markdown
+- no code fences
+- no explanation
+- output JSON only
+`.trim();
+
+    const response = await fetch(
       `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`,
       {
         method: "POST",
@@ -39,12 +62,12 @@ exports.handler = async (event) => {
         body: JSON.stringify({
           contents: [
             {
-              parts: [{ text: trimmedPrompt }]
-            }
+              parts: [{ text: modelPrompt }],
+            },
           ],
           generationConfig: {
-            temperature: 0.6,
-            maxOutputTokens: 700,
+            temperature: 0.2,
+            maxOutputTokens: 500,
             responseMimeType: "application/json",
             responseSchema: {
               type: "OBJECT",
@@ -66,58 +89,77 @@ exports.handler = async (event) => {
               ]
             }
           }
-        })
+        }),
       }
     );
 
-    const data = await geminiResponse.json();
+    const data = await response.json();
 
-    if (!geminiResponse.ok) {
-      return {
-        statusCode: geminiResponse.status,
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          error: data?.error?.message || "Gemini request failed"
-        })
-      };
+    if (!response.ok) {
+      throw new Error(data?.error?.message || "Gemini request failed");
     }
 
     const rawText =
       data?.candidates?.[0]?.content?.parts?.map((p) => p.text).join("") || "";
 
     if (!rawText) {
-      return {
-        statusCode: 500,
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ error: "Gemini returned empty text" })
-      };
+      throw new Error("Gemini returned empty text");
     }
 
-    let parsed;
+    const parsed = JSON.parse(rawText);
+
+    if (
+      !parsed.verseRef ||
+      !parsed.verseSearch ||
+      !parsed.reflection ||
+      !parsed.prayer ||
+      !parsed.closingLine
+    ) {
+      throw new Error("Gemini returned incomplete JSON");
+    }
+
+    return parsed;
+  }
+
+  try {
+    if (event.httpMethod !== "POST") {
+      return jsonResponse(405, { error: "Method Not Allowed" });
+    }
+
+    const apiKey = process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY;
+
+    if (!apiKey) {
+      return jsonResponse(500, { error: "GEMINI_API_KEY not configured in Netlify" });
+    }
+
+    const body = JSON.parse(event.body || "{}");
+
+    // Accept either { heart: "..." } or the old { prompt: "..." }
+    let heart = "";
+    if (typeof body.heart === "string" && body.heart.trim()) {
+      heart = body.heart.trim();
+    } else if (typeof body.prompt === "string" && body.prompt.trim()) {
+      heart = body.prompt.trim();
+    }
+
+    if (!heart) {
+      return jsonResponse(400, { error: "Missing heart message" });
+    }
+
     try {
-      parsed = JSON.parse(rawText);
-    } catch (e) {
-      return {
-        statusCode: 500,
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          error: "Something went wrong preparing your word. Please try again."
-        })
-      };
+      const parsed = await callGemini(apiKey, heart);
+      return jsonResponse(200, parsed);
+    } catch (firstErr) {
+      try {
+        const parsedRetry = await callGemini(apiKey, heart);
+        return jsonResponse(200, parsedRetry);
+      } catch (secondErr) {
+        return jsonResponse(200, fallbackResponse);
+      }
     }
-
-    return {
-      statusCode: 200,
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(parsed)
-    };
   } catch (err) {
-    return {
-      statusCode: 500,
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        error: err.message || "Server error"
-      })
-    };
+    return jsonResponse(500, {
+      error: err.message || "Server error",
+    });
   }
 };
