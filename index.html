@@ -592,6 +592,67 @@ const DEFAULT_REFLECTIONS=["His Word is alive today — not just ancient words o
 
 let currentVerseText='', currentVerseRef='';
 
+
+// ─── BIBLE FETCH HELPER (EN: bible-api.com/WEB · ES: getbible.net/RVR1960) ───
+// Maps English book names to getbible.net numeric book IDs
+const BOOK_TO_GETBIBLE = {
+  "Genesis":"1","Exodus":"2","Leviticus":"3","Numbers":"4","Deuteronomy":"5",
+  "Joshua":"6","Judges":"7","Ruth":"8","1 Samuel":"9","2 Samuel":"10",
+  "1 Kings":"11","2 Kings":"12","1 Chronicles":"13","2 Chronicles":"14",
+  "Ezra":"15","Nehemiah":"16","Esther":"17","Job":"18","Psalms":"19",
+  "Proverbs":"20","Ecclesiastes":"21","Song of Solomon":"22","Isaiah":"23",
+  "Jeremiah":"24","Lamentations":"25","Ezekiel":"26","Daniel":"27","Hosea":"28",
+  "Joel":"29","Amos":"30","Obadiah":"31","Jonah":"32","Micah":"33","Nahum":"34",
+  "Habakkuk":"35","Zephaniah":"36","Haggai":"37","Zechariah":"38","Malachi":"39",
+  "Matthew":"40","Mark":"41","Luke":"42","John":"43","Acts":"44",
+  "Romans":"45","1 Corinthians":"46","2 Corinthians":"47","Galatians":"48",
+  "Ephesians":"49","Philippians":"50","Colossians":"51","1 Thessalonians":"52",
+  "2 Thessalonians":"53","1 Timothy":"54","2 Timothy":"55","Titus":"56",
+  "Philemon":"57","Hebrews":"58","James":"59","1 Peter":"60","2 Peter":"61",
+  "1 John":"62","2 John":"63","3 John":"64","Jude":"65","Revelation":"66"
+};
+
+// Parses a verse path like "John/3/16" or "1+Samuel/16/7" into {book, chapter, verse}
+function parseVersePath(path){
+  const parts = path.replace(/\+/g,' ').split('/');
+  return { book: parts.slice(0,-2).join(' '), chapter: parts[parts.length-2], verse: parts[parts.length-1] };
+}
+
+async function fetchVerse(versePath){
+  if(currentLang === 'es'){
+    try{
+      const {book, chapter, verse} = parseVersePath(versePath);
+      const bookId = BOOK_TO_GETBIBLE[book];
+      if(!bookId) throw new Error('Book not found');
+      const res = await fetch(`https://getbible.net/v2/rvr1960/${bookId}/${chapter}.json`);
+      const data = await res.json();
+      if(data && data.verses){
+        const vObj = Object.values(data.verses).find(v => String(v.verse) === String(verse));
+        if(vObj){
+          // Build a readable reference using Spanish book names
+          const bookNameES = data.book_name || book;
+          return {
+            text: vObj.text.trim(),
+            reference: `${bookNameES} ${chapter}:${verse}`,
+            book_name: book,
+            chapter: parseInt(chapter)
+          };
+        }
+      }
+    } catch(e){ /* fall through to EN */ }
+  }
+  // English (or ES fallback)
+  try{
+    const res = await fetch(`https://bible-api.com/${versePath}?translation=web`);
+    const data = await res.json();
+    if(data && data.text){
+      return { text: data.text.trim(), reference: data.reference, book_name: data.book_name, chapter: data.chapter };
+    }
+  } catch(e){}
+  return null;
+}
+// ─────────────────────────────────────────────────────────────────────────────
+
 function goTo(id){
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
@@ -674,19 +735,18 @@ async function openDailyVerse(){
   const day=getDayOfYear();
   const verseRef=pickTodayVerse();
   try{
-    const res=await fetch(`https://bible-api.com/${verseRef}?translation=web`);
-    const data=await res.json();
-    if(data.text&&data.reference){
-      currentVerseText=data.text.trim();currentVerseRef=data.reference;rememberVerse(verseRef);
-      const enrichKey=Object.keys(ENRICHMENT).find(k=>data.reference.includes(k.split(' ')[0])&&data.reference.includes(k.split(' ')[1]));
+    const bibleData = await fetchVerse(verseRef);
+    if(bibleData && bibleData.text){
+      currentVerseText=bibleData.text;currentVerseRef=bibleData.reference;rememberVerse(verseRef);
+      const enrichKey=Object.keys(ENRICHMENT).find(k=>bibleData.reference.includes(k.split(' ')[0])&&bibleData.reference.includes(k.split(' ')[1]));
       const enrich=ENRICHMENT[enrichKey]||null;
       const reflection=enrich?enrich.reflection:DEFAULT_REFLECTIONS[day%DEFAULT_REFLECTIONS.length];
       const prayer=enrich?enrich.prayer:DEFAULT_PRAYERS[day%DEFAULT_PRAYERS.length];
-      document.getElementById('verseCard').innerHTML=`<div class="verse-ref">${data.reference.toUpperCase()}</div><div class="verse-text">"${currentVerseText}"</div><div class="verse-divider"></div><div class="verse-reflection">${reflection}</div>`;
+      document.getElementById('verseCard').innerHTML=`<div class="verse-ref">${bibleData.reference.toUpperCase()}</div><div class="verse-text">"${currentVerseText}"</div><div class="verse-divider"></div><div class="verse-reflection">${reflection}</div>`;
       document.getElementById('prayerText').textContent=prayer;
       document.getElementById('prayerCard').style.display='block';
       document.getElementById('shareRow').style.display='flex';
-      if(data.book_name && data.chapter){ preloadReader(data.book_name, data.chapter); }
+      if(bibleData.book_name && bibleData.chapter){ preloadReader(bibleData.book_name, bibleData.chapter); }
     } else {showFallback(day)}
   } catch(e){showFallback(day)}
 }
@@ -772,10 +832,9 @@ Rules:
     let verseRef = parsed.verseRef || '';
 
     try {
-      const bRes = await fetch(`https://bible-api.com/${parsed.verseSearch}?translation=web`);
-      const bData = await bRes.json();
-      if (bData.text) {
-        verseText = bData.text.trim();
+      const bData = await fetchVerse(parsed.verseSearch);
+      if (bData && bData.text) {
+        verseText = bData.text;
         verseRef = bData.reference || parsed.verseRef;
       }
     } catch(e) {}
@@ -883,10 +942,25 @@ async function loadChapter(){
   document.getElementById('readingRef').textContent=`${book.toUpperCase()} ${ch}`;
   document.getElementById('readingContent').innerHTML=`<div class="loading-wrap"><div class="loading-cross">✦</div><div class="loading-text">${t('loadingGeneral')}</div></div>`;
   try{
-    const res=await fetch(`https://bible-api.com/${encodeURIComponent(book)}+${ch}?translation=web`);
-    const data=await res.json();
-    if(data.verses){document.getElementById('readingContent').innerHTML=`<div class="reading-title">${book} ${ch}</div>`+data.verses.map(v=>`<div class="reading-verse"><div class="reading-num">${v.verse}</div><div class="reading-text">${v.text.trim()}</div></div>`).join('');}
-    else{document.getElementById('readingContent').innerHTML=`<div style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:16px;color:var(--muted);text-align:center;padding:20px 0">${t('readingError')}</div>`;}
+    let verses = null;
+    if(currentLang === 'es'){
+      // Use getbible.net for Spanish (Reina-Valera 1960)
+      const bookSlug = BOOK_TO_GETBIBLE[book] || book.toLowerCase().replace(/ /g,'-');
+      const res = await fetch(`https://getbible.net/v2/rvr1960/${bookSlug}/${ch}.json`);
+      const data = await res.json();
+      if(data && data.verses){
+        verses = Object.values(data.verses).map(v=>({verse:v.verse,text:v.text.trim()}));
+      }
+    } else {
+      const res=await fetch(`https://bible-api.com/${encodeURIComponent(book)}+${ch}?translation=web`);
+      const data=await res.json();
+      if(data.verses){ verses = data.verses.map(v=>({verse:v.verse,text:v.text.trim()})); }
+    }
+    if(verses){
+      document.getElementById('readingContent').innerHTML=`<div class="reading-title">${book} ${ch}</div>`+verses.map(v=>`<div class="reading-verse"><div class="reading-num">${v.verse}</div><div class="reading-text">${v.text}</div></div>`).join('');
+    } else {
+      document.getElementById('readingContent').innerHTML=`<div style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:16px;color:var(--muted);text-align:center;padding:20px 0">${t('readingError')}</div>`;
+    }
   }catch(e){document.getElementById('readingContent').innerHTML=`<div style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:16px;color:var(--muted);text-align:center;padding:20px 0">${t('noInternet')}</div>`;}
 }
 function nextChapter(){
@@ -1021,6 +1095,10 @@ function setLang(lang) {
     Array.from(cSel.options).forEach((opt, i) => {
       opt.textContent = t('chapterLabel')(i + 1);
     });
+  }
+  // Reload chapter text if reading screen is visible
+  if(document.getElementById('screen-reading').classList.contains('active')){
+    loadChapter();
   }
   // Update logo-sub elements
   document.querySelectorAll('.logo-sub').forEach(el => {
