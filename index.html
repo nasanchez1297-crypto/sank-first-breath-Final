@@ -1,39 +1,3 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>SANK · First Breath</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
-<style>
-:root{
-  --bg:#f0ece4;--cream:#f7f3eb;--white:#fdfaf5;
-  --gold:#c4853a;--gold-soft:rgba(196,133,58,0.12);--gold-mid:rgba(196,133,58,0.3);
-  --brown:#8b5a3a;--taupe:#b8a090;--dark:#3d2410;--muted:#8a6e58;
-  --light:#e8e0d4;--sand:#eae2d6;
-}
-*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-body{background:var(--bg);color:var(--dark);font-family:'DM Sans',sans-serif;min-height:100vh;overflow-x:hidden}
-body{background:radial-gradient(ellipse at top, rgba(255,255,255,.45), transparent 48%),linear-gradient(180deg,#f5efe6 0%,#ece3d6 100%)}
-body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse at 50% -5%,rgba(196,133,58,0.1) 0%,transparent 55%);pointer-events:none;z-index:0}
-.screen{display:none;min-height:100vh;flex-direction:column;align-items:center;justify-content:center;padding:48px 28px 60px;position:relative;z-index:1;max-width:420px;margin:auto}
-.screen.active{display:flex;animation:fadeUp .7s ease}
-@keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
-.logo{text-align:center;margin-bottom:36px}
-.logo-mark{font-family:'Playfair Display',serif;font-size:42px;font-weight:900;color:var(--dark);letter-spacing:.18em;line-height:1}
-.logo-mark span{color:var(--gold)}
-.logo-line{width:28px;height:1px;background:var(--gold);margin:10px auto;opacity:.5}
-.logo-sub{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:14px;color:var(--muted);letter-spacing:.28em;text-transform:uppercase}
-.welcome-title{font-family:'Playfair Display',serif;font-size:34px;font-weight:600;font-style:italic;color:var(--dark);text-align:center;line-height:1.25;margin-bottom:12px}
-.subtitle{display:block;margin-top:8px;font-family:'Cormorant Garamond',serif;font-style:italic;color:var(--gold);font-size:24px}
-.welcome-sub{font-family:'Cormorant Garamond',serif;font-size:19px;font-style:italic;color:var(--muted);text-align:center;line-height:1.85;margin-bottom:40px;max-width:300px}
-.ornament{font-size:22px;color:var(--gold);opacity:.5;margin-bottom:28px;letter-spacing:.4em}
-.btn{width:100%;max-width:320px;padding:13px 18px;font-family:'DM Sans',sans-serif;font-size:12px;letter-spacing:.28em;text-transform:uppercase;border:none;cursor:pointer;border-radius:20px;transition:transform .25s ease,box-shadow .25s ease,background .25s ease;margin:5px 0;box-shadow:0 8px 22px rgba(61,36,16,0.08),inset 0 1px 0 rgba(255,255,255,.35)}
-.btn:hover{transform:translateY(-1px);box-shadow:0 12px 26px rgba(61,36,16,0.1),inset 0 1px 0 rgba(255,255,255,.35)}
-.btn:active{transform:scale(.985)}
-.btn-gold{background:linear-gradient(180deg,#d39a53 0%,#be7f35 100%);color:var(--white);font-weight:500}
-.btn-outline{background:rgba(255,255,255,.78);color:var(--dark);border:1px solid rgba(61,36,16,.09)}
-.btn-ghost{background:transparent;color:var(--muted);font-size:10px;letter-spacing:.22em;padding:11px 14px;box-shadow:none}
 
 .btn-speak{
   background:linear-gradient(135deg,rgba(196,133,58,0.13),rgba(139,90,58,0.09));
