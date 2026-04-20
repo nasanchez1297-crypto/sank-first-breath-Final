@@ -285,33 +285,282 @@ const BIBLE_BOOKS={
 };
 
 const VERSE_POOL=[
-  "John/3/16","Jeremiah/29/11","Psalm/23/1","Isaiah/40/31","Philippians/4/13",
-  "Romans/8/28","Psalm/46/10","Proverbs/3/5","Matthew/6/33","Joshua/1/9",
-  "Psalm/118/24","Lamentations/3/22","John/14/27","2+Timothy/1/7","Psalm/121/2",
-  "Matthew/11/28","Romans/15/13","Psalm/27/1","Ephesians/3/20","Psalm/37/4",
-  "Isaiah/41/10","John/16/33","Psalm/91/1","Hebrews/11/1","James/1/2",
-  "Psalm/139/14","Philippians/4/6","2+Corinthians/5/17","Galatians/5/22","Romans/12/2",
-  "Psalm/34/18","Isaiah/43/2","Matthew/5/14","Luke/1/37","Acts/2/28",
-  "Romans/5/8","1+Corinthians/10/13","Ephesians/2/8","Colossians/3/23","Hebrews/12/1",
-  "James/4/7","1+Peter/5/7","1+John/4/19","Revelation/21/4","Psalm/16/11",
-  "Psalm/19/14","Psalm/28/7","Psalm/31/24","Psalm/40/3","Psalm/55/22",
-  "Psalm/62/1","Psalm/73/26","Psalm/84/11","Psalm/90/14","Psalm/94/19",
-  "Psalm/103/2","Psalm/107/1","Psalm/119/105","Psalm/121/7","Psalm/145/18",
-  "Proverbs/4/23","Proverbs/16/3","Proverbs/17/17","Proverbs/18/10","Proverbs/22/6",
-  "Isaiah/26/3","Isaiah/30/21","Isaiah/53/5","Isaiah/55/8","Isaiah/58/11",
-  "Isaiah/61/1","Jeremiah/17/7","Jeremiah/31/3","Ezekiel/36/26","Daniel/10/19",
-  "Micah/6/8","Zephaniah/3/17","Matthew/5/6","Matthew/6/25","Matthew/7/7",
-  "Matthew/10/30","Matthew/17/20","Matthew/22/37","Matthew/28/20","Mark/10/27",
-  "Mark/11/24","Luke/6/38","Luke/11/9","Luke/12/7","John/1/14",
-  "John/6/35","John/8/32","John/10/10","John/11/25","John/13/34",
-  "John/15/5","John/15/13","Acts/1/8","Romans/1/16","Romans/6/23",
-  "Romans/8/1","Romans/8/38","Romans/10/9","Romans/12/12","Romans/15/4",
-  "1+Corinthians/13/13","1+Corinthians/15/57","2+Corinthians/4/17","2+Corinthians/12/9","Galatians/2/20",
-  "Galatians/6/9","Ephesians/4/32","Ephesians/6/10","Philippians/1/6","Philippians/4/4",
-  "Colossians/1/17","1+Thessalonians/5/16","1+Thessalonians/5/17","2+Timothy/3/16","Hebrews/4/12",
-  "Hebrews/4/16","Hebrews/10/23","James/1/17","James/2/17","1+Peter/2/9",
-  "1+Peter/3/15","2+Peter/3/9","1+John/1/9","1+John/3/1","1+John/4/4",
-  "Jude/1/24","Revelation/3/20","Revelation/22/20","Psalm/1/1","Psalm/4/8"
+  // GENESIS
+  "Genesis/1/1","Genesis/1/27","Genesis/1/31","Genesis/2/7","Genesis/2/24",
+  "Genesis/3/15","Genesis/6/8","Genesis/8/22","Genesis/12/2","Genesis/15/1",
+  "Genesis/15/6","Genesis/17/1","Genesis/18/14","Genesis/21/6","Genesis/22/8",
+  "Genesis/26/24","Genesis/28/15","Genesis/32/28","Genesis/39/21","Genesis/45/7",
+  "Genesis/50/20",
+  // EXODUS
+  "Exodus/3/14","Exodus/4/12","Exodus/14/14","Exodus/15/2","Exodus/15/26",
+  "Exodus/20/2","Exodus/20/3","Exodus/33/14","Exodus/34/6","Exodus/40/34",
+  // LEVITICUS
+  "Leviticus/19/2","Leviticus/19/18","Leviticus/20/7","Leviticus/26/12",
+  // NUMBERS
+  "Numbers/6/24","Numbers/6/25","Numbers/6/26","Numbers/14/9","Numbers/23/19",
+  // DEUTERONOMY
+  "Deuteronomy/4/29","Deuteronomy/6/5","Deuteronomy/7/9","Deuteronomy/8/3",
+  "Deuteronomy/10/12","Deuteronomy/20/4","Deuteronomy/29/29","Deuteronomy/30/14",
+  "Deuteronomy/31/6","Deuteronomy/31/8","Deuteronomy/33/27",
+  // JOSHUA
+  "Joshua/1/5","Joshua/1/7","Joshua/1/8","Joshua/1/9","Joshua/21/45",
+  "Joshua/22/5","Joshua/24/15",
+  // JUDGES
+  "Judges/6/12","Judges/6/14",
+  // RUTH
+  "Ruth/1/16","Ruth/2/12","Ruth/4/14",
+  // 1 SAMUEL
+  "1+Samuel/2/2","1+Samuel/2/9","1+Samuel/3/10","1+Samuel/12/24","1+Samuel/16/7",
+  "1+Samuel/17/37","1+Samuel/17/47",
+  // 2 SAMUEL
+  "2+Samuel/7/22","2+Samuel/22/2","2+Samuel/22/3","2+Samuel/22/29","2+Samuel/22/47",
+  // 1 KINGS
+  "1+Kings/3/9","1+Kings/8/23","1+Kings/8/56","1+Kings/18/39",
+  // 2 KINGS
+  "2+Kings/6/16","2+Kings/17/39",
+  // 1 CHRONICLES
+  "1+Chronicles/4/10","1+Chronicles/16/8","1+Chronicles/16/11","1+Chronicles/16/23",
+  "1+Chronicles/16/34","1+Chronicles/17/20","1+Chronicles/29/11","1+Chronicles/29/14",
+  // 2 CHRONICLES
+  "2+Chronicles/7/14","2+Chronicles/7/15","2+Chronicles/15/7","2+Chronicles/16/9",
+  "2+Chronicles/20/12","2+Chronicles/20/15","2+Chronicles/20/17","2+Chronicles/32/8",
+  // EZRA
+  "Ezra/3/11","Ezra/8/22","Ezra/10/4",
+  // NEHEMIAH
+  "Nehemiah/1/9","Nehemiah/4/14","Nehemiah/4/20","Nehemiah/8/10","Nehemiah/9/6",
+  // ESTHER
+  "Esther/4/14",
+  // JOB
+  "Job/1/21","Job/2/10","Job/5/8","Job/8/21","Job/11/13","Job/13/15",
+  "Job/19/25","Job/22/21","Job/23/10","Job/26/7","Job/28/28","Job/33/4",
+  "Job/37/14","Job/42/2","Job/42/5",
+  // PSALMS
+  "Psalm/1/1","Psalm/1/2","Psalm/1/3","Psalm/2/12","Psalm/4/4","Psalm/4/8",
+  "Psalm/5/3","Psalm/8/1","Psalm/9/9","Psalm/9/10","Psalm/10/17","Psalm/13/5",
+  "Psalm/14/1","Psalm/16/2","Psalm/16/8","Psalm/16/9","Psalm/16/11","Psalm/17/15",
+  "Psalm/18/2","Psalm/18/16","Psalm/18/30","Psalm/18/32","Psalm/19/1","Psalm/19/7",
+  "Psalm/19/14","Psalm/22/24","Psalm/23/1","Psalm/23/2","Psalm/23/3","Psalm/23/4",
+  "Psalm/23/6","Psalm/24/1","Psalm/25/4","Psalm/25/5","Psalm/25/9","Psalm/26/3",
+  "Psalm/27/1","Psalm/27/4","Psalm/27/13","Psalm/27/14","Psalm/28/7","Psalm/29/11",
+  "Psalm/30/5","Psalm/31/5","Psalm/31/19","Psalm/31/24","Psalm/32/7","Psalm/32/8",
+  "Psalm/33/4","Psalm/33/11","Psalm/33/20","Psalm/33/21","Psalm/34/4","Psalm/34/7",
+  "Psalm/34/8","Psalm/34/17","Psalm/34/18","Psalm/36/5","Psalm/37/3","Psalm/37/4",
+  "Psalm/37/5","Psalm/37/7","Psalm/37/23","Psalm/37/24","Psalm/37/39","Psalm/40/1",
+  "Psalm/40/2","Psalm/40/3","Psalm/42/1","Psalm/42/5","Psalm/42/8","Psalm/43/3",
+  "Psalm/43/5","Psalm/46/1","Psalm/46/7","Psalm/46/10","Psalm/51/1","Psalm/51/7",
+  "Psalm/51/10","Psalm/54/4","Psalm/55/22","Psalm/56/3","Psalm/57/1","Psalm/57/10",
+  "Psalm/61/2","Psalm/62/1","Psalm/62/2","Psalm/62/5","Psalm/62/8","Psalm/63/1",
+  "Psalm/63/3","Psalm/66/20","Psalm/68/5","Psalm/68/19","Psalm/71/5","Psalm/71/20",
+  "Psalm/72/18","Psalm/73/23","Psalm/73/24","Psalm/73/25","Psalm/73/26","Psalm/84/11",
+  "Psalm/86/5","Psalm/86/10","Psalm/86/15","Psalm/90/1","Psalm/90/2","Psalm/90/14",
+  "Psalm/91/1","Psalm/91/2","Psalm/91/4","Psalm/91/9","Psalm/91/11","Psalm/94/18",
+  "Psalm/94/19","Psalm/95/1","Psalm/96/3","Psalm/96/10","Psalm/100/1","Psalm/100/2",
+  "Psalm/100/3","Psalm/100/4","Psalm/100/5","Psalm/103/1","Psalm/103/2","Psalm/103/3",
+  "Psalm/103/8","Psalm/103/11","Psalm/103/12","Psalm/103/13","Psalm/104/24","Psalm/107/1",
+  "Psalm/107/9","Psalm/107/20","Psalm/112/1","Psalm/112/7","Psalm/116/1","Psalm/116/7",
+  "Psalm/117/2","Psalm/118/5","Psalm/118/6","Psalm/118/8","Psalm/118/14","Psalm/118/24",
+  "Psalm/119/9","Psalm/119/11","Psalm/119/18","Psalm/119/50","Psalm/119/97","Psalm/119/105",
+  "Psalm/119/114","Psalm/119/130","Psalm/119/160","Psalm/119/165","Psalm/119/176",
+  "Psalm/121/1","Psalm/121/2","Psalm/121/7","Psalm/121/8","Psalm/122/1","Psalm/126/3",
+  "Psalm/130/4","Psalm/130/5","Psalm/131/1","Psalm/133/1","Psalm/136/26","Psalm/138/3",
+  "Psalm/138/7","Psalm/139/1","Psalm/139/7","Psalm/139/13","Psalm/139/14","Psalm/139/16",
+  "Psalm/139/17","Psalm/139/23","Psalm/143/8","Psalm/143/10","Psalm/145/3","Psalm/145/8",
+  "Psalm/145/9","Psalm/145/14","Psalm/145/18","Psalm/145/19","Psalm/146/2","Psalm/147/3",
+  "Psalm/147/4","Psalm/147/5","Psalm/148/5","Psalm/149/4","Psalm/150/6",
+  // PROVERBS
+  "Proverbs/1/7","Proverbs/2/6","Proverbs/3/3","Proverbs/3/5","Proverbs/3/6",
+  "Proverbs/3/7","Proverbs/3/9","Proverbs/3/24","Proverbs/3/26","Proverbs/4/7",
+  "Proverbs/4/18","Proverbs/4/23","Proverbs/8/17","Proverbs/10/12","Proverbs/11/2",
+  "Proverbs/11/14","Proverbs/12/15","Proverbs/12/25","Proverbs/13/20","Proverbs/14/12",
+  "Proverbs/15/1","Proverbs/16/3","Proverbs/16/9","Proverbs/16/18","Proverbs/17/17",
+  "Proverbs/18/10","Proverbs/18/24","Proverbs/19/11","Proverbs/19/21","Proverbs/20/7",
+  "Proverbs/21/2","Proverbs/22/6","Proverbs/22/9","Proverbs/23/7","Proverbs/24/16",
+  "Proverbs/25/11","Proverbs/27/1","Proverbs/27/17","Proverbs/28/1","Proverbs/28/13",
+  "Proverbs/29/25","Proverbs/30/5","Proverbs/31/25","Proverbs/31/30",
+  // ECCLESIASTES
+  "Ecclesiastes/1/2","Ecclesiastes/2/24","Ecclesiastes/3/1","Ecclesiastes/3/11",
+  "Ecclesiastes/4/9","Ecclesiastes/4/12","Ecclesiastes/5/2","Ecclesiastes/7/8",
+  "Ecclesiastes/9/11","Ecclesiastes/12/1","Ecclesiastes/12/13",
+  // SONG OF SOLOMON
+  "Song+of+Solomon/2/4","Song+of+Solomon/8/7",
+  // ISAIAH
+  "Isaiah/1/18","Isaiah/6/8","Isaiah/7/14","Isaiah/9/6","Isaiah/12/2","Isaiah/26/3",
+  "Isaiah/26/4","Isaiah/28/16","Isaiah/29/16","Isaiah/30/18","Isaiah/30/21","Isaiah/32/17",
+  "Isaiah/33/2","Isaiah/33/22","Isaiah/35/4","Isaiah/38/17","Isaiah/40/1","Isaiah/40/8",
+  "Isaiah/40/10","Isaiah/40/11","Isaiah/40/28","Isaiah/40/29","Isaiah/40/31","Isaiah/41/10",
+  "Isaiah/41/13","Isaiah/42/3","Isaiah/42/6","Isaiah/43/1","Isaiah/43/2","Isaiah/43/4",
+  "Isaiah/43/10","Isaiah/43/18","Isaiah/43/19","Isaiah/44/3","Isaiah/44/22","Isaiah/45/5",
+  "Isaiah/46/4","Isaiah/48/17","Isaiah/49/4","Isaiah/49/15","Isaiah/49/16","Isaiah/50/7",
+  "Isaiah/51/3","Isaiah/52/7","Isaiah/53/4","Isaiah/53/5","Isaiah/53/6","Isaiah/54/10",
+  "Isaiah/54/17","Isaiah/55/1","Isaiah/55/6","Isaiah/55/7","Isaiah/55/8","Isaiah/55/9",
+  "Isaiah/55/10","Isaiah/55/11","Isaiah/56/1","Isaiah/57/15","Isaiah/58/11","Isaiah/59/1",
+  "Isaiah/60/1","Isaiah/61/1","Isaiah/61/2","Isaiah/61/3","Isaiah/62/5","Isaiah/63/9",
+  "Isaiah/64/8","Isaiah/65/24","Isaiah/66/2","Isaiah/66/13",
+  // JEREMIAH
+  "Jeremiah/1/5","Jeremiah/1/8","Jeremiah/1/9","Jeremiah/15/16","Jeremiah/17/7",
+  "Jeremiah/17/8","Jeremiah/24/7","Jeremiah/29/11","Jeremiah/29/12","Jeremiah/29/13",
+  "Jeremiah/31/3","Jeremiah/31/13","Jeremiah/31/25","Jeremiah/31/34","Jeremiah/32/17",
+  "Jeremiah/32/27","Jeremiah/33/3","Jeremiah/42/11",
+  // LAMENTATIONS
+  "Lamentations/3/21","Lamentations/3/22","Lamentations/3/23","Lamentations/3/24",
+  "Lamentations/3/25","Lamentations/3/32",
+  // EZEKIEL
+  "Ezekiel/11/19","Ezekiel/18/31","Ezekiel/34/16","Ezekiel/36/26","Ezekiel/36/27",
+  "Ezekiel/37/3","Ezekiel/37/5",
+  // DANIEL
+  "Daniel/2/20","Daniel/2/22","Daniel/3/17","Daniel/6/27","Daniel/9/9","Daniel/10/19",
+  "Daniel/12/3",
+  // HOSEA
+  "Hosea/2/19","Hosea/6/6","Hosea/10/12","Hosea/14/4",
+  // JOEL
+  "Joel/2/13","Joel/2/25","Joel/2/28","Joel/2/32",
+  // AMOS
+  "Amos/5/4","Amos/5/14",
+  // OBADIAH
+  "Obadiah/1/3",
+  // JONAH
+  "Jonah/2/9","Jonah/4/2",
+  // MICAH
+  "Micah/6/8","Micah/7/7","Micah/7/8","Micah/7/18",
+  // NAHUM
+  "Nahum/1/7",
+  // HABAKKUK
+  "Habakkuk/2/3","Habakkuk/2/4","Habakkuk/3/19",
+  // ZEPHANIAH
+  "Zephaniah/3/17",
+  // HAGGAI
+  "Haggai/2/4","Haggai/2/9",
+  // ZECHARIAH
+  "Zechariah/2/8","Zechariah/4/6","Zechariah/8/8","Zechariah/9/9","Zechariah/10/12",
+  // MALACHI
+  "Malachi/3/6","Malachi/3/10","Malachi/3/17","Malachi/4/2",
+  // MATTHEW
+  "Matthew/4/4","Matthew/5/3","Matthew/5/4","Matthew/5/5","Matthew/5/6","Matthew/5/7",
+  "Matthew/5/8","Matthew/5/9","Matthew/5/14","Matthew/5/16","Matthew/5/44","Matthew/5/48",
+  "Matthew/6/6","Matthew/6/9","Matthew/6/14","Matthew/6/19","Matthew/6/20","Matthew/6/21",
+  "Matthew/6/24","Matthew/6/25","Matthew/6/26","Matthew/6/27","Matthew/6/33","Matthew/6/34",
+  "Matthew/7/1","Matthew/7/7","Matthew/7/8","Matthew/7/12","Matthew/9/37","Matthew/10/30",
+  "Matthew/11/28","Matthew/11/29","Matthew/11/30","Matthew/14/27","Matthew/16/26",
+  "Matthew/17/20","Matthew/18/20","Matthew/19/26","Matthew/20/28","Matthew/21/22",
+  "Matthew/22/37","Matthew/22/39","Matthew/24/35","Matthew/25/21","Matthew/28/19",
+  "Matthew/28/20",
+  // MARK
+  "Mark/1/15","Mark/1/17","Mark/4/39","Mark/5/36","Mark/9/23","Mark/9/24","Mark/10/15",
+  "Mark/10/27","Mark/10/45","Mark/11/22","Mark/11/23","Mark/11/24","Mark/12/30",
+  "Mark/12/31","Mark/16/15","Mark/16/16",
+  // LUKE
+  "Luke/1/37","Luke/1/38","Luke/1/45","Luke/1/78","Luke/2/14","Luke/3/16","Luke/4/18",
+  "Luke/6/31","Luke/6/36","Luke/6/38","Luke/6/45","Luke/7/50","Luke/9/23","Luke/10/19",
+  "Luke/10/27","Luke/11/9","Luke/11/10","Luke/12/6","Luke/12/7","Luke/12/32","Luke/12/48",
+  "Luke/15/7","Luke/18/1","Luke/18/27","Luke/19/10","Luke/21/19","Luke/21/33",
+  // JOHN
+  "John/1/1","John/1/3","John/1/12","John/1/14","John/1/16","John/3/16","John/3/17",
+  "John/3/36","John/4/14","John/4/24","John/5/24","John/6/35","John/6/37","John/6/47",
+  "John/7/38","John/8/12","John/8/31","John/8/32","John/8/36","John/10/9","John/10/10",
+  "John/10/11","John/10/27","John/10/28","John/11/25","John/11/26","John/13/34",
+  "John/13/35","John/14/1","John/14/2","John/14/3","John/14/6","John/14/13","John/14/14",
+  "John/14/16","John/14/27","John/15/4","John/15/5","John/15/7","John/15/9","John/15/11",
+  "John/15/12","John/15/13","John/16/13","John/16/24","John/16/33","John/17/3",
+  "John/17/17","John/20/29","John/21/17",
+  // ACTS
+  "Acts/1/8","Acts/2/4","Acts/2/17","Acts/2/38","Acts/3/19","Acts/4/12","Acts/4/31",
+  "Acts/5/29","Acts/9/31","Acts/10/34","Acts/13/38","Acts/13/39","Acts/14/17",
+  "Acts/16/31","Acts/17/28","Acts/20/24","Acts/20/28","Acts/20/35",
+  // ROMANS
+  "Romans/1/16","Romans/1/17","Romans/3/23","Romans/3/24","Romans/4/20","Romans/4/21",
+  "Romans/5/1","Romans/5/3","Romans/5/4","Romans/5/5","Romans/5/8","Romans/5/17",
+  "Romans/6/4","Romans/6/11","Romans/6/14","Romans/6/23","Romans/7/24","Romans/8/1",
+  "Romans/8/2","Romans/8/5","Romans/8/11","Romans/8/14","Romans/8/15","Romans/8/16",
+  "Romans/8/17","Romans/8/18","Romans/8/26","Romans/8/27","Romans/8/28","Romans/8/31",
+  "Romans/8/32","Romans/8/35","Romans/8/37","Romans/8/38","Romans/8/39","Romans/10/9",
+  "Romans/10/10","Romans/10/13","Romans/11/33","Romans/12/1","Romans/12/2","Romans/12/9",
+  "Romans/12/10","Romans/12/12","Romans/12/18","Romans/12/19","Romans/12/21",
+  "Romans/13/8","Romans/13/11","Romans/15/4","Romans/15/13","Romans/16/19",
+  // 1 CORINTHIANS
+  "1+Corinthians/1/25","1+Corinthians/1/27","1+Corinthians/2/9","1+Corinthians/2/12",
+  "1+Corinthians/3/9","1+Corinthians/3/16","1+Corinthians/6/19","1+Corinthians/6/20",
+  "1+Corinthians/9/24","1+Corinthians/10/13","1+Corinthians/12/4","1+Corinthians/13/4",
+  "1+Corinthians/13/7","1+Corinthians/13/8","1+Corinthians/13/13","1+Corinthians/15/10",
+  "1+Corinthians/15/55","1+Corinthians/15/57","1+Corinthians/15/58","1+Corinthians/16/13",
+  // 2 CORINTHIANS
+  "2+Corinthians/1/3","2+Corinthians/1/4","2+Corinthians/1/20","2+Corinthians/3/17",
+  "2+Corinthians/3/18","2+Corinthians/4/6","2+Corinthians/4/7","2+Corinthians/4/16",
+  "2+Corinthians/4/17","2+Corinthians/4/18","2+Corinthians/5/7","2+Corinthians/5/17",
+  "2+Corinthians/5/21","2+Corinthians/6/2","2+Corinthians/9/6","2+Corinthians/9/7",
+  "2+Corinthians/9/8","2+Corinthians/10/4","2+Corinthians/10/5","2+Corinthians/12/9",
+  // GALATIANS
+  "Galatians/2/16","Galatians/2/20","Galatians/3/26","Galatians/3/27","Galatians/3/28",
+  "Galatians/4/6","Galatians/5/1","Galatians/5/13","Galatians/5/16","Galatians/5/22",
+  "Galatians/5/25","Galatians/6/2","Galatians/6/7","Galatians/6/8","Galatians/6/9",
+  "Galatians/6/10",
+  // EPHESIANS
+  "Ephesians/1/3","Ephesians/1/7","Ephesians/1/17","Ephesians/1/18","Ephesians/2/4",
+  "Ephesians/2/5","Ephesians/2/8","Ephesians/2/10","Ephesians/2/14","Ephesians/2/19",
+  "Ephesians/3/12","Ephesians/3/16","Ephesians/3/17","Ephesians/3/18","Ephesians/3/19",
+  "Ephesians/3/20","Ephesians/3/21","Ephesians/4/2","Ephesians/4/3","Ephesians/4/24",
+  "Ephesians/4/29","Ephesians/4/32","Ephesians/5/1","Ephesians/5/2","Ephesians/5/8",
+  "Ephesians/5/15","Ephesians/5/16","Ephesians/6/10","Ephesians/6/11","Ephesians/6/14",
+  // PHILIPPIANS
+  "Philippians/1/3","Philippians/1/6","Philippians/1/9","Philippians/1/20","Philippians/1/21",
+  "Philippians/2/3","Philippians/2/4","Philippians/2/5","Philippians/2/13","Philippians/2/14",
+  "Philippians/3/7","Philippians/3/8","Philippians/3/10","Philippians/3/13","Philippians/3/14",
+  "Philippians/4/4","Philippians/4/5","Philippians/4/6","Philippians/4/7","Philippians/4/8",
+  "Philippians/4/9","Philippians/4/11","Philippians/4/13","Philippians/4/19",
+  // COLOSSIANS
+  "Colossians/1/9","Colossians/1/10","Colossians/1/11","Colossians/1/13","Colossians/1/17",
+  "Colossians/2/6","Colossians/2/7","Colossians/3/1","Colossians/3/2","Colossians/3/3",
+  "Colossians/3/12","Colossians/3/13","Colossians/3/15","Colossians/3/16","Colossians/3/17",
+  "Colossians/3/23","Colossians/3/24","Colossians/4/6",
+  // 1 THESSALONIANS
+  "1+Thessalonians/1/3","1+Thessalonians/2/12","1+Thessalonians/3/12","1+Thessalonians/4/13",
+  "1+Thessalonians/5/8","1+Thessalonians/5/11","1+Thessalonians/5/16","1+Thessalonians/5/17",
+  "1+Thessalonians/5/18","1+Thessalonians/5/23","1+Thessalonians/5/24",
+  // 2 THESSALONIANS
+  "2+Thessalonians/1/11","2+Thessalonians/2/16","2+Thessalonians/3/3","2+Thessalonians/3/16",
+  // 1 TIMOTHY
+  "1+Timothy/1/14","1+Timothy/1/17","1+Timothy/2/1","1+Timothy/4/8","1+Timothy/4/12",
+  "1+Timothy/6/6","1+Timothy/6/8","1+Timothy/6/11","1+Timothy/6/12","1+Timothy/6/17",
+  // 2 TIMOTHY
+  "2+Timothy/1/7","2+Timothy/1/9","2+Timothy/2/13","2+Timothy/2/22","2+Timothy/3/16",
+  "2+Timothy/3/17","2+Timothy/4/7","2+Timothy/4/8","2+Timothy/4/17",
+  // TITUS
+  "Titus/2/11","Titus/2/12","Titus/3/4","Titus/3/5",
+  // PHILEMON
+  "Philemon/1/6",
+  // HEBREWS
+  "Hebrews/1/3","Hebrews/2/18","Hebrews/3/4","Hebrews/3/13","Hebrews/4/9","Hebrews/4/12",
+  "Hebrews/4/14","Hebrews/4/15","Hebrews/4/16","Hebrews/6/11","Hebrews/6/19","Hebrews/7/25",
+  "Hebrews/9/15","Hebrews/10/22","Hebrews/10/23","Hebrews/10/24","Hebrews/10/35",
+  "Hebrews/10/36","Hebrews/11/1","Hebrews/11/6","Hebrews/12/1","Hebrews/12/2",
+  "Hebrews/12/6","Hebrews/12/11","Hebrews/13/5","Hebrews/13/6","Hebrews/13/8",
+  // JAMES
+  "James/1/2","James/1/3","James/1/4","James/1/5","James/1/12","James/1/17","James/1/22",
+  "James/2/8","James/2/17","James/2/26","James/3/17","James/4/2","James/4/7","James/4/8",
+  "James/5/8","James/5/11","James/5/13","James/5/16",
+  // 1 PETER
+  "1+Peter/1/3","1+Peter/1/7","1+Peter/1/8","1+Peter/1/23","1+Peter/2/9","1+Peter/2/11",
+  "1+Peter/3/9","1+Peter/3/12","1+Peter/3/15","1+Peter/4/10","1+Peter/4/11","1+Peter/5/5",
+  "1+Peter/5/6","1+Peter/5/7","1+Peter/5/8","1+Peter/5/10",
+  // 2 PETER
+  "2+Peter/1/2","2+Peter/1/3","2+Peter/1/4","2+Peter/1/10","2+Peter/3/8","2+Peter/3/9",
+  "2+Peter/3/18",
+  // 1 JOHN
+  "1+John/1/5","1+John/1/7","1+John/1/9","1+John/2/1","1+John/2/2","1+John/3/1",
+  "1+John/3/16","1+John/3/18","1+John/4/4","1+John/4/7","1+John/4/8","1+John/4/9",
+  "1+John/4/10","1+John/4/11","1+John/4/18","1+John/4/19","1+John/5/4","1+John/5/11",
+  "1+John/5/14","1+John/5/15",
+  // 2 JOHN
+  "2+John/1/6","2+John/1/8",
+  // 3 JOHN
+  "3+John/1/2","3+John/1/4",
+  // JUDE
+  "Jude/1/2","Jude/1/20","Jude/1/24","Jude/1/25",
+  // REVELATION
+  "Revelation/1/5","Revelation/1/8","Revelation/1/17","Revelation/2/4","Revelation/2/10",
+  "Revelation/3/8","Revelation/3/10","Revelation/3/20","Revelation/4/11","Revelation/5/12",
+  "Revelation/7/9","Revelation/7/17","Revelation/11/15","Revelation/15/3","Revelation/19/6",
+  "Revelation/21/3","Revelation/21/4","Revelation/21/5","Revelation/22/12","Revelation/22/17",
+  "Revelation/22/20","Revelation/22/21"
 ];
 
 const ENRICHMENT={
@@ -351,34 +600,57 @@ function openSpeakScreen(){
   goTo('screen-speak');
 }
 
-function getVerseHistory(){
-  try{
-    return JSON.parse(localStorage.getItem('sank_verse_history') || '[]');
-  }catch(e){
-    return [];
+// Deterministic shuffle using date as seed — same seed = same order every time for that day
+function seededShuffle(arr, seed) {
+  const a = [...arr];
+  let s = seed;
+  for (let i = a.length - 1; i > 0; i--) {
+    s = (s * 1664525 + 1013904223) & 0xffffffff;
+    const j = Math.abs(s) % (i + 1);
+    [a[i], a[j]] = [a[j], a[i]];
   }
+  return a;
+}
+// Get absolute day count since a fixed epoch — gives a unique integer per calendar day
+function getAbsoluteDay() {
+  const epoch = new Date('2024-01-01');
+  const now = new Date();
+  now.setHours(0, 0, 0, 0);
+  return Math.floor((now - epoch) / (1000 * 60 * 60 * 24));
+}
+function getVerseHistory(){
+  try{return JSON.parse(localStorage.getItem('sank_verse_history') || '[]');}
+  catch(e){return [];}
 }
 function saveVerseHistory(history){
   localStorage.setItem('sank_verse_history', JSON.stringify(history));
 }
 function pickTodayVerse(){
+  const todayKey = getTodayKey();
+  // If we already picked a verse today, return the same one
   const history = getVerseHistory();
-  const recentRefs = history.slice(-60).map(v => v.ref);
-  let available = VERSE_POOL.filter(v => !recentRefs.includes(v));
-  if(!available.length){
-    available = [...VERSE_POOL];
+  const todayEntry = history.find(v => v.date === todayKey);
+  if(todayEntry) return todayEntry.ref;
+
+  const absDay = getAbsoluteDay();
+  // Exclude verses used in the last 600 days (almost 2 years)
+  const recentRefs = new Set(history.slice(-600).map(v => v.ref));
+  let available = VERSE_POOL.filter(v => !recentRefs.has(v));
+  // If somehow exhausted (pool < 600), reset exclusions but keep a small buffer
+  if(available.length === 0){
+    const recentBuffer = new Set(history.slice(-30).map(v => v.ref));
+    available = VERSE_POOL.filter(v => !recentBuffer.has(v));
   }
-  const day = getDayOfYear();
-  return available[day % available.length];
+  // Deterministic shuffle so the same day always gets the same verse
+  const shuffled = seededShuffle(available, absDay);
+  return shuffled[absDay % shuffled.length];
 }
 function rememberVerse(ref){
   const todayKey = getTodayKey();
   let history = getVerseHistory();
   if(history.some(v => v.date === todayKey)) return;
   history.push({ date: todayKey, ref });
-  if(history.length > 120){
-    history = history.slice(-120);
-  }
+  if(history.length > 730){ history = history.slice(-730); } // keep 2 years
   saveVerseHistory(history);
 }
 
